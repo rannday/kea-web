@@ -1,0 +1,165 @@
+/* Theme */
+:root {
+  --primary-color: #00aaff;
+  --hover-color: #0077cc;
+  --border-color: #ccc;
+  --text-color: #ffffff;
+  --background-color: #13161E;
+  --nav-title-color: #dcdcdc;
+  --input-dropdown-bg: #1A1D25;
+
+  /* Typography */
+  --font-family-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "Courier New", Courier, monospace;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --font-size-base: 1rem;
+  --font-size-large: 1.25rem;
+  --font-size-small: 0.875rem;
+  --font-size-nav: 1.1rem;
+  --line-height: 1.5;
+  --heading-line-height: 1.3;
+
+  /* Layout */
+  --max-width: 1200px;
+  --container-padding: 1.5em;
+}
+
+/* Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;  /* Ensure flexbox layout */
+  flex-direction: column;  /* Stack elements vertically */
+  margin: 0;
+  padding: 0;
+}
+
+/* Main content area */
+main {
+  flex-grow: 1;  /* Ensures main takes available space */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--container-padding);
+  box-sizing: border-box;
+}
+
+/* Navbar */
+nav {
+  background-color: var(--background-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em var(--container-padding);
+}
+
+.nav-title {
+  color: var(--nav-title-color);
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.nav-links a {
+  color: var(--primary-color);
+  font-size: var(--font-size-nav);
+  padding: 0.5em 0.75em;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 6px;
+}
+
+.nav-links a:hover {
+  background-color: var(--hover-color);
+  color: white;
+}
+
+/* Dropdown Menu */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: var(--font-size-nav);
+  cursor: pointer;
+  padding: 0.5em 0.75em;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-toggle:hover {
+  background-color: var(--hover-color);
+  color: white;
+}
+
+.dropdown-menu {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--input-dropdown-bg);
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 0.5em;
+  z-index: 1000;
+  overflow: hidden;
+  min-width: fit-content;
+  white-space: nowrap;
+  padding: 0.25em 0;
+  transition: visibility 0.2s, opacity 0.2s ease-in-out;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.5em 1em;
+  color: var(--primary-color);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-menu a:hover {
+  background-color: var(--hover-color);
+  color: white;
+}
+
+/* Ensure dropdown stays open while hovering */
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;  /* Pushes the footer down */
+  flex-shrink: 0;  /* Prevents footer from shrinking */
+  text-align: center;
+  padding: 1em 0;
+  background-color: var(--background-color);
+  color: #aaa;
+  font-size: var(--font-size-small);
+  box-sizing: border-box;
+}

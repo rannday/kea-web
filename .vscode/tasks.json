@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Air with Debug",
+      "type": "shell",
+      "command": "cmd.exe",
+      "args": ["/C", "air"],
+      "options": {
+        "env": {
+          "DEBUG": "1"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
