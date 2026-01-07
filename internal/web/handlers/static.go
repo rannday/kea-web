@@ -241,17 +241,20 @@ func Stylesheets(staticDir string) http.Handler {
 // Javascripts serves /js/*
 // Disk override: <staticDir>/js/<file>
 // Fallback: embedded bundled JS (assets_dist/js/*)
+//
+// Note: This handler is intentionally "flat" (uses filepath.Base). Subdirectories like
+// /js/wasm/foo.js will resolve to "foo.js".
 func Javascripts(staticDir string) http.Handler {
   diskRoot := filepath.Join(staticDir, "js")
-
   embedded := http.FileServer(BundledJSFS())
 
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
     // Expect URL like /js/<file>
     name := filepath.Base(r.URL.Path)
+    ext := strings.ToLower(filepath.Ext(name))
 
-    // Basic sanity: only serve js
-    if !strings.HasSuffix(strings.ToLower(name), ".js") {
+    // Allow .js and .wasm only
+    if ext != ".js" && ext != ".wasm" {
       http.NotFound(w, r)
       return
     }
@@ -259,7 +262,13 @@ func Javascripts(staticDir string) http.Handler {
     // Disk override first
     diskPath := filepath.Join(diskRoot, name)
     if data, err := os.ReadFile(diskPath); err == nil {
-      w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+      switch ext {
+      case ".js":
+        w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+      case ".wasm":
+        w.Header().Set("Content-Type", "application/wasm")
+      }
+
       w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
       w.Header().Set("Last-Modified", time.Now().UTC().Format(http.TimeFormat)) // optional
       _, _ = w.Write(data)
@@ -267,8 +276,23 @@ func Javascripts(staticDir string) http.Handler {
     }
 
     // Embedded fallback
-    w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+    switch ext {
+    case ".js":
+      w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+    case ".wasm":
+      w.Header().Set("Content-Type", "application/wasm")
+    }
+
     w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+
+    if _, err := BundledJSFS().Open("wasm_exec.js"); err != nil {
+      utils.Error("EMBED missing wasm_exec.js: %v", err)
+    }
+    if _, err := BundledJSFS().Open("netutil.wasm"); err != nil {
+      utils.Error("EMBED missing netutil.wasm: %v", err)
+    }
+
     http.StripPrefix("/js/", embedded).ServeHTTP(w, r)
   })
 }
+

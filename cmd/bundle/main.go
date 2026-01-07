@@ -124,7 +124,7 @@ func main() {
   m.AddFunc("application/javascript", js.Minify)
 
   cssOrder := []string{"reset.css", "style.css"}
-  jsOrder := []string{"prefetch.js"}
+  jsOrder := []string{"prefetch.js", "wasm_loader.js"}
 
   cssData, err := readAndConcat(srcCSS, ".css", cssOrder)
   if err != nil {
